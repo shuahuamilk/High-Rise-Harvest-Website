@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>High-Rise Harvest | Official Site</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/logo.png">
 </head>
 <body>
 
@@ -20,7 +21,9 @@
     </div>
 
     <!-- SCROLL TO TOP -->
-    <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">&#8679;</button>
+    <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">
+        <img src="assets/icons/icon-arrow-up.png" alt="" aria-hidden="true">
+    </button>
 
     <nav class="navbar">
         <div class="logo">
@@ -90,12 +93,16 @@
         <h2>Game Features</h2>
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">🌾</div>
+                <div class="feature-icon">
+                    <img src="assets/icons/icon-vertical.png" alt="Vertical Farming icon">
+                </div>
                 <h3>Vertical Farming</h3>
                 <p>Maximize crop yields using innovative, space-saving agricultural methods with tiered vertical farm plots.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🐗</div>
+                <div class="feature-icon">
+                    <img src="assets/icons/icon-pest.png" alt="Pest Defense icon">
+                </div>
                 <h3>Pest Defense</h3>
                 <p>Protect your crops from boars, squirrels, raccoons, and caterpillars using water balloons and pest sprays.</p>
             </div>
@@ -175,47 +182,47 @@
 </section>
 
     <section id="news" class="container bg-light target-section">
-    <h2>Latest News</h2>
+        <h2>Latest News</h2>
 
-    <!-- Featured Post -->
-    <div class="news-featured">
-        <div class="news-featured-image">
-            <img src="assets/news1.jpg" alt="Featured News Image">
-            <span class="news-tag">📢 Announcement</span>
+    <!-- Tab Buttons -->
+        <div class="news-tabs">
+            <button class="news-tab-btn active" data-panel="panel-news">Announcements</button>
+            <button class="news-tab-btn" data-panel="panel-devlogs">Dev Logs</button>
         </div>
-        <div class="news-featured-content">
-            <p class="news-date">May 23, 2026</p>
-            <h3>High-Rise Harvest is Now Live!</h3>
-            <p>After months of hard work, we are thrilled to announce that High-Rise Harvest is officially available for download. Play as Bobbito, manage your vertical farm, and help pay off Lolo Grice's hospital bills across four challenging seasons.</p>
-            <a href="#" class="btn-news">Read More</a>
+
+        <!-- Tab Panel: News -->
+        <div class="news-tab-panel active" id="panel-news">
+
+            <!-- Change when something major happens, hardcoded since major updates rarely occur -->
+            <!-- Featured Post -->
+            <div class="news-featured">
+                <div class="news-featured-image">
+                    <img src="assets/news1.jpg" alt="Featured News Image">
+                    <span class="news-tag">Announcement</span>
+                </div>
+                <div class="news-featured-content">
+                    <p class="news-date">May 23, 2026</p>
+                    <h3>High-Rise Harvest is Now Live!</h3>
+                    <p>After months of hard work, we are thrilled to announce that High-Rise Harvest is officially available for download. Play as Bobbito, manage your vertical farm, and help pay off Lolo Grice's hospital bills across four challenging seasons.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Panel: Dev Logs (dynamic from Google Sheets) -->
+        <div class="news-tab-panel" id="panel-devlogs">
+            <p class="devlog-loading" id="devlogLoading">Loading dev logs...</p>
+            <p class="devlog-error" id="devlogError" style="display:none;"></p>
+            <div class="news-grid" id="devlogGrid"></div>
+        </div>
+    </section>
+
+    <!-- DEV LOG MODAL -->
+    <div id="devlogModal" class="modal devlog-modal" role="dialog" aria-modal="true">
+        <div class="devlog-modal-inner">
+            <button class="devlog-modal-close" aria-label="Close">&times;</button>
+            <div class="devlog-modal-body"></div>
         </div>
     </div>
-
-    <!-- Smaller Posts Grid -->
-    <div class="news-grid">
-        <div class="news-card">
-            <span class="news-tag">🛠 Dev Log</span>
-            <p class="news-date">April 10, 2026</p>
-            <h3>Dev Log #3 — Winter Season Update</h3>
-            <p>We finalized the Winter season mechanics including the Heat Lamp system and increased animal frequency during the cold months.</p>
-            <a href="#" class="btn-news">Read More</a>
-        </div>
-        <div class="news-card">
-            <span class="news-tag">🛠 Dev Log</span>
-            <p class="news-date">March 22, 2026</p>
-            <h3>Dev Log #2 — Market System Deep Dive</h3>
-            <p>This week we share how the dynamic market pricing system works across seasons and how NPC quests influence crop demand.</p>
-            <a href="#" class="btn-news">Read More</a>
-        </div>
-        <div class="news-card">
-            <span class="news-tag">🛠 Dev Log</span>
-            <p class="news-date">March 1, 2026</p>
-            <h3>Dev Log #1 — Welcome to Ink & Embers</h3>
-            <p>Our very first dev log. We introduce the team, the concept behind High-Rise Harvest, and our goals for the capstone project.</p>
-            <a href="#" class="btn-news">Read More</a>
-        </div>
-    </div>
-</section>
 
     <section id="team" class="container target-section">
     <h2>The Team</h2>
@@ -318,5 +325,13 @@
     </footer>
 
     <script src="script.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <!-- Dev Logs & Comments -->
+    <script src="firebase.js"></script>
+    <script src="devlogs.js"></script>
 </body>
 </html>
