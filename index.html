@@ -8,6 +8,20 @@
 </head>
 <body>
 
+    <!-- PAGE LOADER -->
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-content">
+            <div class="loader-icon">
+                <img src="/assets/icons/icon-grow.png" alt="Loader Icon">
+            </div>
+            <p class="loader-text">Loading High-Rise Harvest...</p>
+            <div class="loader-bar"><div class="loader-fill"></div></div>
+        </div>
+    </div>
+
+    <!-- SCROLL TO TOP -->
+    <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">&#8679;</button>
+
     <nav class="navbar">
         <div class="logo">
             <a href="#">
@@ -31,7 +45,7 @@
     </nav>
 
     <header class="hero">
-    <video class="hero-video" autoplay muted loop playsinline>
+    <video class="hero-video" autoplay muted loop playsinline poster="assets/hero-poster.jpg">
         <source src="assets/trailer.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay"></div>
@@ -47,19 +61,25 @@
         <p>Step into a 3D first-person farming simulation. Play as Bobbito, manage a compact vertical farm lot, manage resources, and navigate market stalls to upgrade your setup and support your family.</p>
         <div class="about-flow">
             <div class="about-card">
-                <div class="about-card-icon">🏡</div>
+                <div class="about-card-icon">
+                    <img src="assets/icons/icon-inherit.png" alt="Inherit the Farm icon">
+                </div>
                 <h3>Inherit the Farm</h3>
                 <p>Bobbito arrives at his ailing grandfather Lolo Grice's backyard farm. With a letter left behind, he takes on the responsibility of keeping the farm alive.</p>
             </div>
             <div class="about-arrow">&#8594;</div>
             <div class="about-card">
-                <div class="about-card-icon">🌱</div>
+                <div class="about-card-icon">
+                    <img src="assets/icons/icon-grow.png" alt="Grow and Defend icon">
+                </div>
                 <h3>Grow & Defend</h3>
                 <p>Plant, water, fertilize, and harvest crops across four seasons. Protect your yield from pests, boars, and raccoons using tools from the market.</p>
             </div>
             <div class="about-arrow">&#8594;</div>
             <div class="about-card">
-                <div class="about-card-icon">💰</div>
+                <div class="about-card-icon">
+                    <img src="assets/icons/icon-earn.png" alt="Earn & Progress icon">
+                </div>
                 <h3>Earn & Progress</h3>
                 <p>Sell your harvest, meet seasonal quotas, and earn enough Shep to pay off Lolo Grice's hospital bills before the final season ends.</p>
             </div>
@@ -261,7 +281,40 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Ink & Embers • FEU Institute of Technology • Capstone Project 2026 • All Right Reserved.</p>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="/assets/logo.png" alt="Ink & Embers Logo" class="footer-logo">
+                <p class="footer-studio-name">Ink & Embers</p>
+                <span class="footer-subtitle">FEU Institute of Technology · Capstone 2026</span>
+            </div>
+            <div class="footer-nav">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#media">Media</a></li>
+                    <li><a href="#news">News</a></li>
+                    <li><a href="#team">Team</a></li>
+                </ul>
+            </div>
+            <div class="footer-resources">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="assets/docs/Ink & Embers - High-Rise Harvest GDD.pdf" target="_blank">Game Design Document</a></li>
+                    <li><a href="assets/docs/Ink & Embers - High-Rise Harvest Thesis Paper.pdf" target="_blank">Thesis Paper</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h4>Find Us</h4>
+                <div class="social-links">
+                    <a href="YOUR_YOUTUBE_LINK_HERE" target="_blank" aria-label="YouTube">YouTube</a>
+                    <a href="YOUR_ITCH_IO_LINK_HERE" target="_blank" aria-label="Itch.io">Itch.io</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Ink & Embers · All Rights Reserved.</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>

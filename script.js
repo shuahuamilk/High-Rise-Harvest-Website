@@ -1,3 +1,42 @@
+// --- PAGE LOADER ---
+window.addEventListener('load', () => {
+    const loader = document.getElementById('pageLoader');
+    // Give the fill animation time to complete (1.3s) before hiding
+    setTimeout(() => {
+        loader.classList.add('hidden');
+    }, 1450);
+});
+
+
+// --- HERO VIDEO FADE-IN ---
+const heroVideo = document.querySelector('.hero-video');
+if (heroVideo) {
+    heroVideo.style.opacity = '0';
+    heroVideo.style.transition = 'opacity 1s ease';
+    heroVideo.addEventListener('canplay', () => {
+        heroVideo.style.opacity = '1';
+    });
+    // Fallback: show video even if canplay fires late
+    setTimeout(() => { heroVideo.style.opacity = '1'; }, 2000);
+}
+
+
+// --- SCROLL TO TOP BUTTON ---
+const scrollToTopBtn = document.getElementById('scrollToTop');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+        scrollToTopBtn.classList.add('visible');
+    } else {
+        scrollToTopBtn.classList.remove('visible');
+    }
+});
+
+scrollToTopBtn.addEventListener('click', () => {
+    smoothScrollTo(document.body);
+});
+
+
 // --- HAMBURGER MENU ---
 const hamburger = document.getElementById('hamburger');
 const navLinksMenu = document.getElementById('navLinks');
