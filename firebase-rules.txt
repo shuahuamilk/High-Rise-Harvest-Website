@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ───── DEV LOGS: REACTIONS ─────
+    match /devlogs/{logId}/meta/reactions {
+      allow read: if true;
+      allow write: if request.resource.data.keys().hasOnly(['🔥', '❤️', '👏', '🌱']);
+    }
+
+    // ───── DEV LOGS: COMMENTS ─────
+    match /devlogs/{logId}/comments/{commentId} {
+      allow read: if true;
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.name.size() <= 40
+                    && request.resource.data.message is string
+                    && request.resource.data.message.size() <= 500;
+      // Only allow deletion by a specific admin user (replace with actual admin UID)
+      allow delete: if request.auth != null && request.auth.uid == 'YOUR_SINGLE_ADMIN_UID';
+      allow update: if false;
+    }
+
+    // ───── ADMIN: collection-group read across all dev log comments ─────
+    // collectionGroup() queries need this separately — the path-specific
+    // rule above does not extend to them.
+    match /{path=**}/comments/{commentId} {
+      allow read: if request.auth != null;
+    }
+
+    // ───── PLAYER FEEDBACK ─────
+    match /feedback/{feedbackId} {
+      allow create: if request.resource.data.status == "pending"
+                    && request.resource.data.message is string
+                    && request.resource.data.message.size() <= 600;
+
+      allow read: if resource.data.status == "approved";
+
+      allow update: if resource.data.status == "approved"
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions', 'reactionTotal']);
+
+      // Allow full read, update, delete for authenticated users (admins). Can be refined with roles.
+      allow read, update, delete: if request.auth != null && (request.auth.token.role == 'super-admin' || request.auth.token.role == 'moderator');
+    }
+
+    // ───── DEFAULT DENY ─────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

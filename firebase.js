@@ -109,9 +109,17 @@ async function postComment(logId, name, message) {
         throw new Error(`Please wait ${wait}s before commenting again.`);
     }
 
+    const nameModeration = moderateMessage(trimmedName);
+    if (!nameModeration.allowed) throw new Error("Your name contains language that isn't allowed. Please use a different name.");
+
+    const moderation = moderateMessage(trimmedMsg);
+    if (!moderation.allowed) throw new Error(moderation.reason);
+
     await db.collection("devlogs").doc(logId).collection("comments").add({
         name: trimmedName,
-        message: trimmedMsg,
+        message: moderation.message,
+        autoModerated: moderation.autoModerated,
+        flagged: moderation.flagged,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
 

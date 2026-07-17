@@ -65,6 +65,69 @@ function renderContent(text) {
         .replace(/\n/g, "<br>");
 }
 
+// ─── COMMENT BADGE HELPERS ────────────────────────────────────
+const _cardBadgeUnsubs = {}; // logId → unsubscribe fn
+
+function getCommentSeenKey(logId) {
+    return `hrh_comments_seen_${logId}`;
+}
+
+function getCommentSeenTime(logId) {
+    return parseInt(localStorage.getItem(getCommentSeenKey(logId)) || "0", 10);
+}
+
+function markCommentsSeen(logId) {
+    localStorage.setItem(getCommentSeenKey(logId), Date.now().toString());
+}
+
+function attachCardBadge(logId, btn) {
+    // Clean up any existing listener for this logId
+    if (_cardBadgeUnsubs[logId]) {
+        _cardBadgeUnsubs[logId]();
+        delete _cardBadgeUnsubs[logId];
+    }
+
+    const seenTime = getCommentSeenTime(logId);
+
+    const unsub = db.collection("devlogs").doc(logId).collection("comments")
+        .orderBy("timestamp", "desc")
+        .limit(1)
+        .onSnapshot((snap) => {
+            if (!snap.empty) {
+                const latestTs = snap.docs[0].data().timestamp;
+                if (latestTs && latestTs.toMillis && latestTs.toMillis() > seenTime) {
+                    showCardDot(btn);
+                } else {
+                    hideCardDot(btn);
+                }
+            } else {
+                hideCardDot(btn);
+            }
+        }, () => { /* silently ignore badge errors */ });
+
+    _cardBadgeUnsubs[logId] = unsub;
+}
+
+function showCardDot(btn) {
+    let dot = btn.querySelector(".notif-dot");
+    if (!dot) {
+        dot = document.createElement("span");
+        dot.className = "notif-dot";
+        btn.appendChild(dot);
+    }
+    dot.classList.add("visible");
+}
+
+function hideCardDot(btn) {
+    const dot = btn.querySelector(".notif-dot");
+    if (dot) dot.classList.remove("visible");
+}
+
+function cleanupAllCardBadges() {
+    Object.values(_cardBadgeUnsubs).forEach(unsub => unsub());
+    Object.keys(_cardBadgeUnsubs).forEach(k => delete _cardBadgeUnsubs[k]);
+}
+
 // ─── BUILD DEVLOG CARD ────────────────────────────────────────
 function buildLogCard(log) {
     const card = document.createElement("div");
@@ -75,8 +138,11 @@ function buildLogCard(log) {
         <p class="news-date">${escapeHtml(log.date)}</p>
         <h3>${escapeHtml(log.title)}</h3>
         <p>${escapeHtml(log.summary)}</p>
-        <button class="btn-news btn-open-log" data-id="${escapeHtml(log.id)}">Read More</button>
+        <button class="btn-news btn-open-log" data-id="${escapeHtml(log.id)}" style="position:relative;">Read More</button>
     `;
+    // Attach the comment notification badge to the Read More button
+    const readMoreBtn = card.querySelector(".btn-open-log");
+    attachCardBadge(log.id, readMoreBtn);
     return card;
 }
 
@@ -100,7 +166,7 @@ function openLogModal(log) {
 
     body.innerHTML = `
         <p class="news-date">${escapeHtml(log.date)}</p>
-        <h2 class="devlog-modal-title">${escapeHtml(log.title)}</h2>
+        <h2 class="devlog-modal-title" id="devlogModalTitle">${escapeHtml(log.title)}</h2>
         <div class="devlog-modal-divider"></div>
         <div class="devlog-modal-content"><p>${renderContent(log.content || log.summary)}</p></div>
 
@@ -174,6 +240,12 @@ function openLogModal(log) {
     });
 
     // ── Wire comments ──
+    // Mark this log's comments as seen when the modal opens
+    markCommentsSeen(log.id);
+    // Also hide the badge on the card's Read More button if it's still in the DOM
+    const cardBtn = document.querySelector(`.btn-open-log[data-id="${log.id}"]`);
+    if (cardBtn) hideCardDot(cardBtn);
+
     const listEl = body.querySelector(`#comments-list-${log.id}`);
     const unsubComments = listenComments(log.id, (comments) => {
         if (comments.length === 0) {
@@ -234,6 +306,58 @@ function initNewsTabs() {
     });
 }
 
+// ─── PAGINATION ───────────────────────────────────────────────
+const DEVLOGS_PER_PAGE = 6;
+let currentDevLogPage = 1;
+
+function getTotalDevLogPages() {
+    return Math.max(1, Math.ceil((window._devLogs?.length || 0) / DEVLOGS_PER_PAGE));
+}
+
+function renderDevLogPage(page) {
+    const grid = document.getElementById("devlogGrid");
+    const totalPages = getTotalDevLogPages();
+
+    currentDevLogPage = Math.min(Math.max(1, page), totalPages);
+
+    const start = (currentDevLogPage - 1) * DEVLOGS_PER_PAGE;
+    const pageLogs = window._devLogs.slice(start, start + DEVLOGS_PER_PAGE);
+
+    // Close out badge listeners from the previous page before rebuilding —
+    // otherwise every page visited this session keeps its onSnapshot
+    // listeners open in the background indefinitely.
+    cleanupAllCardBadges();
+
+    grid.innerHTML = "";
+    pageLogs.forEach(log => grid.appendChild(buildLogCard(log)));
+
+    renderPaginationControls(totalPages);
+}
+
+function renderPaginationControls(totalPages) {
+    const pagination = document.getElementById("devlogPagination");
+
+    if (totalPages <= 1) {
+        pagination.style.display = "none";
+        pagination.innerHTML = "";
+        return;
+    }
+
+    pagination.style.display = "flex";
+    pagination.innerHTML = `
+        <button class="pagination-btn" id="devlogPrevBtn" ${currentDevLogPage === 1 ? "disabled" : ""}>&#8592; Prev</button>
+        <span class="pagination-info">Page ${currentDevLogPage} of ${totalPages}</span>
+        <button class="pagination-btn" id="devlogNextBtn" ${currentDevLogPage === totalPages ? "disabled" : ""}>Next &#8594;</button>
+    `;
+
+    document.getElementById("devlogPrevBtn").addEventListener("click", () => goToDevLogPage(currentDevLogPage - 1));
+    document.getElementById("devlogNextBtn").addEventListener("click", () => goToDevLogPage(currentDevLogPage + 1));
+}
+
+function goToDevLogPage(page) {
+    renderDevLogPage(page);
+}
+
 // ─── INIT ─────────────────────────────────────────────────────
 async function initDevLogs() {
     initNewsTabs();
@@ -273,9 +397,7 @@ async function initDevLogs() {
             return;
         }
 
-        logs.forEach(log => {
-            grid.appendChild(buildLogCard(log));
-        });
+        renderDevLogPage(1);
 
     } catch (err) {
         loadingEl.style.display = "none";

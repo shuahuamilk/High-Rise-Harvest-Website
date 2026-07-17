@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 — Page Not Found | High-Rise Harvest</title>
+
+    <!-- Theme color for mobile browser chrome -->
+    <meta name="theme-color" content="#2e4a3f" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a2e25" media="(prefers-color-scheme: dark)">
+
+    <!-- CRITICAL: Theme flash prevention - must run BEFORE CSS loads -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'system';
+            function getSystemTheme() {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            function applyTheme(theme) {
+                const effectiveTheme = theme === 'system' ? getSystemTheme() : theme;
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+            }
+            applyTheme(savedTheme);
+        })();
+    </script>
+
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="assets/logo.png">
     <style>
@@ -16,7 +36,8 @@
             justify-content: center;
             text-align: center;
             padding: 4rem 5%;
-            background-color: #faf8f5;
+            background-color: var(--bg-primary);
+            transition: background-color 0.3s ease;
         }
         .error-icon {
             font-size: 5rem;
@@ -27,28 +48,28 @@
             from { transform: translateY(0) rotate(-5deg); }
             to   { transform: translateY(-12px) rotate(5deg); }
         }
-        .error-code { font-size: 5rem; color: #2e4a3f; line-height: 1; margin-bottom: 1rem; }
-        .error-title { font-size: 1rem; color: #e67e22; margin-bottom: 1.5rem; line-height: 1.6; }
-        .error-message { font-size: 0.7rem; color: #777; max-width: 480px; line-height: 2; margin-bottom: 2.5rem; }
-        .error-divider { width: 60px; height: 3px; background: #e67e22; border-radius: 2px; margin: 0 auto 2.5rem; }
+        .error-code { font-size: 5rem; color: var(--heading-color); line-height: 1; margin-bottom: 1rem; }
+        .error-title { font-size: 1rem; color: var(--accent-primary); margin-bottom: 1.5rem; line-height: 1.6; }
+        .error-message { font-size: 0.7rem; color: var(--text-muted); max-width: 480px; line-height: 2; margin-bottom: 2.5rem; }
+        .error-divider { width: 60px; height: 3px; background: var(--accent-primary); border-radius: 2px; margin: 0 auto 2.5rem; }
         .error-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
         .btn-home {
-            background-color: #2e4a3f; color: white; padding: 0.8rem 1.5rem;
+            background-color: var(--accent-green); color: white; padding: 0.8rem 1.5rem;
             border: none; border-radius: 5px; cursor: pointer; font-size: 0.7rem;
             text-decoration: none; transition: background 0.3s ease, transform 0.3s ease;
             font-family: 'Press Start 2P', system-ui, sans-serif;
         }
-        .btn-home:hover { background-color: #1c3027; transform: translateY(-3px); }
+        .btn-home:hover { background-color: var(--accent-green-dark); transform: translateY(-3px); }
         .btn-download-alt {
-            background-color: #e67e22; color: white; padding: 0.8rem 1.5rem;
+            background-color: var(--accent-primary); color: white; padding: 0.8rem 1.5rem;
             border: none; border-radius: 5px; cursor: pointer; font-size: 0.7rem;
             text-decoration: none; transition: background 0.3s ease, transform 0.3s ease;
             font-family: 'Press Start 2P', system-ui, sans-serif;
         }
-        .btn-download-alt:hover { background-color: #d35400; transform: translateY(-3px); }
+        .btn-download-alt:hover { background-color: var(--accent-hover); transform: translateY(-3px); }
         .error-nav-links { margin-top: 3rem; display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-        .error-nav-links a { font-size: 0.55rem; color: #aaa; text-decoration: none; transition: color 0.3s ease; }
-        .error-nav-links a:hover { color: #2e4a3f; }
+        .error-nav-links a { font-size: 0.55rem; color: var(--text-muted); text-decoration: none; transition: color 0.3s ease; }
+        .error-nav-links a:hover { color: var(--heading-color); }
         @media (max-width: 600px) {
             .error-code { font-size: 3.5rem; }
             .error-title { font-size: 0.8rem; }
