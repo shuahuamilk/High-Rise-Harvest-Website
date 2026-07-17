@@ -1,13 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+<!--#region Everything in <head> -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>High-Rise Harvest | Official Site</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <meta name="description" content="High-Rise Harvest is a 3D first-person vertical farming simulation. Play as Bobbito, manage your farm across four seasons, and help pay off Lolo Grice's hospital bills. Developed by Ink & Embers at FEU Institute of Technology.">
 
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="High-Rise Harvest | Official Site">
+    <meta property="og:description" content="A 3D first-person vertical farming simulation by Ink & Embers. Plant, defend, harvest, and survive four seasons.">
+    <meta property="og:image" content="assets/news1.jpg">
+    <meta property="og:url" content="https://high-rise-harvest.netlify.app">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="High-Rise Harvest | Official Site">
+    <meta name="twitter:description" content="A 3D first-person vertical farming simulation by Ink & Embers.">
+    <meta name="twitter:image" content="assets/news1.jpg">
+
+    <!-- Theme color for mobile browser chrome -->
+    <meta name="theme-color" content="#2e4a3f" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a2e25" media="(prefers-color-scheme: dark)">
+
+    <!-- CRITICAL: Theme flash prevention - must run BEFORE CSS loads -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'system';
+            
+            function getSystemTheme() {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            
+            function applyTheme(theme) {
+                let effectiveTheme = theme;
+                if (theme === 'system') {
+                    effectiveTheme = getSystemTheme();
+                }
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+            }
+            
+            applyTheme(savedTheme);
+        })();
+    </script>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<!-- #endregion -->
+<body>
+<!-- #region Page Loader -->
+    <!-- PAGE LOADER -->
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-content">
+            <div class="loader-icon">
+                <img src="/assets/icons/icon-grow.png" alt="Loader Icon">
+            </div>
+            <p class="loader-text">Loading High-Rise Harvest...</p>
+            <div class="loader-bar"><div class="loader-fill"></div></div>
+        </div>
+    </div>
+<!-- #endregion -->
+<!-- #region Scroll to top button and navigation bar -->
+    <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll to top">
+        <img src="assets/icons/icon-arrow-up.png" alt="" aria-hidden="true">
+    </button>
+<!-- #endregion -->
+    <!--#region Navigation Bar-->
     <nav class="navbar">
         <div class="logo">
             <a href="#">
@@ -15,51 +73,79 @@
                 <span class="logo-text">High-Rise Harvest</span>
             </a>
         </div>
+
         <button class="hamburger" id="hamburger">
             <span></span>
             <span></span>
             <span></span>
         </button>
+
         <ul class="nav-links" id="navLinks">
             <li><a href="#about">About</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#media">Media</a></li>
             <li><a href="#news">News</a></li>
             <li><a href="#team">Team</a></li>
+            <li><a href="#feedback">Feedback</a></li>
             <li><a href="#download" class="btn-download-nav">Download</a></li>
         </ul>
+
+        <button type="button" id="themeToggle" class="theme-toggle-float" title="Theme">
+            <img src="assets/icons/system-mode.png" alt="System theme" class="theme-toggle-icon" id="themeToggleIcon">
+        </button>
+
+        <!-- Background Music Controls -->
+        <div class="music-controls" id="musicControls">
+            <button type="button" id="musicToggle" class="theme-toggle-float music-toggle-float" title="Mute music" aria-pressed="false">
+                <svg id="musicIcon" class="music-toggle-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="4,9 4,15 8,15 13,20 13,4 8,9" fill="currentColor"></polygon>
+                    <path d="M16 9a5 5 0 0 1 0 6"></path>
+                </svg>
+            </button>
+            <div class="music-volume-pill">
+                <input type="range" id="musicVolumeSlider" class="music-volume-slider" min="0" max="100" value="50" aria-label="Music volume">
+            </div>
+        </div>
+        <audio id="bgMusic" src="assets/geoffharvey-fun-on-the-farm.mp3" loop preload="auto"></audio>
     </nav>
-
+    <!-- #endregion -->
+    <!--#region Header-->
     <header class="hero">
-    <video class="hero-video" autoplay muted loop playsinline>
-        <source src="assets/trailer.mp4" type="video/mp4">
-    </video>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <h1>High-Rise Harvest</h1>
-        <p>A Farming Simulation Raising Awareness of Vertical Farming Practices.</p>
-        <button class="btn-primary open-modal">Download Game</button>
-    </div>
-</header>
-
+        <video class="hero-video" autoplay muted loop playsinline preload="none" poster="assets/news1.jpg">
+            <source src="assets/trailer.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>High-Rise Harvest</h1>
+            <p>A Farming Simulation Raising Awareness of Vertical Farming Practices.</p>
+            <button class="btn-primary open-modal">Download Game</button>
+        </div>
+    </header>
+    <!-- #endregion -->
     <section id="about" class="container target-section">
         <h2>About the Game</h2>
         <p>Step into a 3D first-person farming simulation. Play as Bobbito, manage a compact vertical farm lot, manage resources, and navigate market stalls to upgrade your setup and support your family.</p>
         <div class="about-flow">
             <div class="about-card">
-                <div class="about-card-icon">🏡</div>
+                <div class="about-card-icon">
+                    <img src="assets/icons/icon-inherit.png" alt="Inherit the Farm icon">
+                </div>
                 <h3>Inherit the Farm</h3>
                 <p>Bobbito arrives at his ailing grandfather Lolo Grice's backyard farm. With a letter left behind, he takes on the responsibility of keeping the farm alive.</p>
             </div>
             <div class="about-arrow">&#8594;</div>
             <div class="about-card">
-                <div class="about-card-icon">🌱</div>
+                <div class="about-card-icon">
+                    <img src="assets/icons/icon-grow.png" alt="Grow and Defend icon">
+                </div>
                 <h3>Grow & Defend</h3>
                 <p>Plant, water, fertilize, and harvest crops across four seasons. Protect your yield from pests, boars, and raccoons using tools from the market.</p>
             </div>
             <div class="about-arrow">&#8594;</div>
             <div class="about-card">
-                <div class="about-card-icon">💰</div>
+                <div class="about-card-icon">
+                    <img src="assets/icons/icon-earn.png" alt="Earn & Progress icon">
+                </div>
                 <h3>Earn & Progress</h3>
                 <p>Sell your harvest, meet seasonal quotas, and earn enough Shep to pay off Lolo Grice's hospital bills before the final season ends.</p>
             </div>
@@ -69,33 +155,33 @@
     <section id="features" class="container bg-light target-section">
         <h2>Game Features</h2>
         <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🌾</div>
+            <div class="feature-card" data-glb="assets/icons/farming-plot.glb">
+                <div class="feature-icon"></div>
                 <h3>Vertical Farming</h3>
                 <p>Maximize crop yields using innovative, space-saving agricultural methods with tiered vertical farm plots.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🐗</div>
+            <div class="feature-card" data-glb="assets/icons/boar.glb">
+                <div class="feature-icon"></div>
                 <h3>Pest Defense</h3>
                 <p>Protect your crops from boars, squirrels, raccoons, and caterpillars using water balloons and pest sprays.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🛒</div>
+            <div class="feature-card" data-glb="assets/icons/shop.glb">
+                <div class="feature-icon"></div>
                 <h3>Dynamic Market</h3>
                 <p>Interact with NPCs to buy seeds, upgrade tools, and sell your harvest at prices that shift with every season.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🍂</div>
+            <div class="feature-card" data-glb="assets/icons/seasonal-trees.glb">
+                <div class="feature-icon"></div>
                 <h3>Seasonal Progression</h3>
                 <p>Navigate four seasons — Spring, Autumn, Summer, and Winter — each with unique crops and increasing difficulty.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">💧</div>
+            <div class="feature-card" data-glb="assets/icons/watering-can.glb">
+                <div class="feature-icon"></div>
                 <h3>Resource Management</h3>
                 <p>Balance water, energy, and fertilizer to keep crops healthy. Compost spoiled produce into natural fertilizers.</p>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎒</div>
+            <div class="feature-card" data-glb="assets/icons/chest.glb">
+                <div class="feature-icon"></div>
                 <h3>Inventory System</h3>
                 <p>Manage a five-slot hotbar and storage shed to organize seeds, tools, and harvested crops efficiently.</p>
             </div>
@@ -109,45 +195,40 @@
 
             <!-- Slide 1: Trailer -->
             <div class="carousel-slide">
-                <div class="trailer-wrapper">
-                    <iframe
-                        src="https://www.youtube.com/embed/ot7uXNQskhs?rel=0"
-                        title="High-Rise Harvest Official Trailer"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
+                <div class="trailer-wrapper" data-video-id="VYzSIS7ctLw">
+                    <img src="https://i.ytimg.com/vi/VYzSIS7ctLw/hqdefault.jpg" alt="High-Rise Harvest Official Trailer thumbnail" class="trailer-thumbnail">
+                    <button class="trailer-play-btn" aria-label="Play trailer">&#9658;</button>
                 </div>
                 <p class="slide-label">Official Trailer</p>
             </div>
 
             <!-- Slide 2-6: Screenshots -->
             <div class="carousel-slide">
-                <img src="assets/screenshot1.jpg" alt="Gameplay Screenshot 1" class="carousel-img">
+                <img src="assets/screenshot1.jpg" alt="Gameplay Screenshot 1" class="carousel-img" loading="lazy">
                 <p class="slide-label">Gameplay Screenshot #1</p>
             </div>
             <div class="carousel-slide">
-                <img src="assets/screenshot2.jpg" alt="Gameplay Screenshot 2" class="carousel-img">
+                <img src="assets/screenshot2.jpg" alt="Gameplay Screenshot 2" class="carousel-img" loading="lazy">
                 <p class="slide-label">Gameplay Screenshot #2</p>
             </div>
             <div class="carousel-slide">
-                <img src="assets/screenshot3.jpg" alt="Gameplay Screenshot 3" class="carousel-img">
+                <img src="assets/screenshot3.jpg" alt="Gameplay Screenshot 3" class="carousel-img" loading="lazy">
                 <p class="slide-label">Gameplay Screenshot #3</p>
             </div>
             <div class="carousel-slide">
-                <img src="assets/screenshot4.jpg" alt="Gameplay Screenshot 4" class="carousel-img">
+                <img src="assets/screenshot4.jpg" alt="Gameplay Screenshot 4" class="carousel-img" loading="lazy">
                 <p class="slide-label">Gameplay Screenshot #4</p>
             </div>
             <div class="carousel-slide">
-                <img src="assets/screenshot5.jpg" alt="Gameplay Screenshot 5" class="carousel-img">
+                <img src="assets/screenshot5.jpg" alt="Gameplay Screenshot 5" class="carousel-img" loading="lazy">
                 <p class="slide-label">Gameplay Screenshot #5</p>
             </div>
 
         </div>
 
         <!-- Arrows -->
-        <button class="carousel-btn prev" id="prevBtn">&#8592;</button>
-        <button class="carousel-btn next" id="nextBtn">&#8594;</button>
+        <button class="carousel-btn prev" id="prevBtn" aria-label="Previous slide">&#8592;</button>
+        <button class="carousel-btn next" id="nextBtn" aria-label="Next slide">&#8594;</button>
 
         <!-- Dots -->
         <div class="carousel-dots" id="carouselDots"></div>
@@ -155,60 +236,61 @@
 </section>
 
     <section id="news" class="container bg-light target-section">
-    <h2>Latest News</h2>
+        <h2>Latest News</h2>
 
-    <!-- Featured Post -->
-    <div class="news-featured">
-        <div class="news-featured-image">
-            <img src="assets/news1.jpg" alt="Featured News Image">
-            <span class="news-tag">📢 Announcement</span>
+    <!-- Tab Buttons -->
+        <div class="news-tabs">
+            <button class="news-tab-btn active" data-panel="panel-news">Announcements</button>
+            <button class="news-tab-btn" data-panel="panel-devlogs">Dev Logs</button>
         </div>
-        <div class="news-featured-content">
-            <p class="news-date">May 23, 2026</p>
-            <h3>High-Rise Harvest is Now Live!</h3>
-            <p>After months of hard work, we are thrilled to announce that High-Rise Harvest is officially available for download. Play as Bobbito, manage your vertical farm, and help pay off Lolo Grice's hospital bills across four challenging seasons.</p>
-            <a href="#" class="btn-news">Read More</a>
+
+        <!-- Tab Panel: News -->
+        <div class="news-tab-panel active" id="panel-news">
+
+            <!-- Change when something major happens, hardcoded since major updates rarely occur -->
+            <!-- Featured Post -->
+            <div class="news-featured">
+                <div class="news-featured-image">
+                    <img src="assets/news1.jpg" alt="Featured News Image" loading="lazy">
+                    <span class="news-tag">Announcement</span>
+                </div>
+                <div class="news-featured-content">
+                    <p class="news-date">May 23, 2026</p>
+                    <h3>High-Rise Harvest is Now Live!</h3>
+                    <p>After months of hard work, we are thrilled to announce that High-Rise Harvest is officially available for download. Play as Bobbito, manage your vertical farm, and help pay off Lolo Grice's hospital bills across four challenging seasons.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Panel: Dev Logs (dynamic from Google Sheets) -->
+        <div class="news-tab-panel" id="panel-devlogs">
+            <p class="devlog-loading" id="devlogLoading">Loading dev logs...</p>
+            <p class="devlog-error" id="devlogError" style="display:none;"></p>
+            <div class="news-grid" id="devlogGrid"></div>
+            <div class="devlog-pagination" id="devlogPagination"></div>
+        </div>
+    </section>
+
+    <!-- DEV LOG MODAL -->
+    <div id="devlogModal" class="modal devlog-modal" role="dialog" aria-modal="true" aria-labelledby="devlogModalTitle">
+        <div class="devlog-modal-inner">
+            <button class="devlog-modal-close" aria-label="Close">&times;</button>
+            <div class="devlog-modal-body"></div>
         </div>
     </div>
-
-    <!-- Smaller Posts Grid -->
-    <div class="news-grid">
-        <div class="news-card">
-            <span class="news-tag">🛠 Dev Log</span>
-            <p class="news-date">April 10, 2026</p>
-            <h3>Dev Log #3 — Winter Season Update</h3>
-            <p>We finalized the Winter season mechanics including the Heat Lamp system and increased animal frequency during the cold months.</p>
-            <a href="#" class="btn-news">Read More</a>
-        </div>
-        <div class="news-card">
-            <span class="news-tag">🛠 Dev Log</span>
-            <p class="news-date">March 22, 2026</p>
-            <h3>Dev Log #2 — Market System Deep Dive</h3>
-            <p>This week we share how the dynamic market pricing system works across seasons and how NPC quests influence crop demand.</p>
-            <a href="#" class="btn-news">Read More</a>
-        </div>
-        <div class="news-card">
-            <span class="news-tag">🛠 Dev Log</span>
-            <p class="news-date">March 1, 2026</p>
-            <h3>Dev Log #1 — Welcome to Ink & Embers</h3>
-            <p>Our very first dev log. We introduce the team, the concept behind High-Rise Harvest, and our goals for the capstone project.</p>
-            <a href="#" class="btn-news">Read More</a>
-        </div>
-    </div>
-</section>
 
     <section id="team" class="container target-section">
     <h2>The Team</h2>
 
     <!-- Studio Identity -->
     <div class="studio-identity">
-        <img src="/assets/logo.png" alt="Ink & Embers Logo" class="studio-logo">
+        <img src="/assets/team-picture.jpg" alt="Ink & Embers Team Photo" class="studio-photo">
         <h3 class="studio-name">Ink & Embers</h3>
         <p class="studio-desc">A passionate team of student developers from FEU Institute of Technology, proudly crafting High-Rise Harvest as their capstone project for the degree of Bachelor of Science in Information Technology with specialization in Animation and Game Development.</p>
     </div>
 
-    <!-- Introductory Video -->
-    <div class="team-video-wrapper">
+    <!-- Introductory Video — unhide and replace YOUR_VIDEO_ID when video is ready -->
+    <!-- <div class="team-video-wrapper">
         <iframe
             src="https://www.youtube.com/embed/YOUR_VIDEO_ID?rel=0"
             title="Ink & Embers Team Introduction"
@@ -216,54 +298,215 @@
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen>
         </iframe>
-    </div>
+    </div> -->
 
     <!-- Team Cards -->
     <div class="team-grid">
         <div class="team-card">
-            <div class="team-avatar">👤</div>
+            <!-- Replace src with actual photo when available -->
+            <div class="team-avatar team-avatar-img">
+                <img src="assets/team/kyan.jpg" alt="Kyan Brandon P. Aceveda" class="team-photo" onerror="this.parentElement.innerHTML='👤'">
+            </div>
             <h3>Kyan Brandon P. Aceveda</h3>
-            <p class="team-role">3D Artist / Programmer</p>
+            <p class="team-role">3D Artist / Project Manager</p>
         </div>
         <div class="team-card">
-            <div class="team-avatar">👤</div>
+            <div class="team-avatar team-avatar-img">
+                <img src="assets/team/kenn.jpg" alt="Kenn Jiro Agustin" class="team-photo" onerror="this.parentElement.innerHTML='👤'">
+            </div>
             <h3>Kenn Jiro Agustin</h3>
             <p class="team-role">3D Artist / Rigger</p>
         </div>
         <div class="team-card">
-            <div class="team-avatar">👤</div>
+            <div class="team-avatar team-avatar-img">
+                <img src="assets/team/patrick.jpg" alt="Patrick Dhale A. Concepcion" class="team-photo" onerror="this.parentElement.innerHTML='👤'">
+            </div>
             <h3>Patrick Dhale A. Concepcion</h3>
-            <p class="team-role">3D Artist / Game Developer</p>
+            <p class="team-role">3D Artist</p>
         </div>
         <div class="team-card">
-            <div class="team-avatar">👤</div>
+            <div class="team-avatar team-avatar-img">
+                <img src="assets/team/markhy.jpg" alt="Markhy Miles P. Guevara" class="team-photo" onerror="this.parentElement.innerHTML='👤'">
+            </div>
             <h3>Markhy Miles P. Guevara</h3>
-            <p class="team-role">3D Artist / Project Manager</p>
+            <p class="team-role">Game Programmer</p>
         </div>
         <div class="team-card">
-            <div class="team-avatar">👤</div>
+            <div class="team-avatar team-avatar-img">
+                <img src="assets/team/xyrus.png" alt="Paul Xyrus M. Tan" class="team-photo" onerror="this.parentElement.innerHTML='👤'">
+            </div>
             <h3>Paul Xyrus M. Tan</h3>
-            <p class="team-role">Web Developer</p>
+            <p class="team-role">3D Artist/ Web Developer / UI/UX Designer</p>
         </div>
     </div>
 </section>
 
-    <div id="downloadModal" class="modal">
+<section id="feedback" class="container bg-light target-section">
+    <h2>Player Feedback</h2>
+    <p>Tell us what you think! Submissions are reviewed before they appear below, please keep it constructive and free of profanity or sensitive content :3</p>
+
+    <div class="feedback-layout">
+        <!-- PRE-TEST SURVEY QR CODE -->
+        <div class="survey-qr-card survey-qr-card-pre">
+            <a class="survey-qr-link" href="https://forms.gle/yXvceSHVgjUct6Bn7" target="_blank" rel="noopener noreferrer" aria-label="Open the Pre-Test Survey form in a new tab">
+                <img class="survey-qr-svg" src="assets/qrcode-pre-test-survey.svg" alt="QR code for the Pre-Test Survey" loading="lazy">
+            </a>
+            <a class="survey-qr-fallback" href="https://forms.gle/yXvceSHVgjUct6Bn7" target="_blank" rel="noopener noreferrer">Click the QR code if you cannot scan</a>
+        </div>
+
+        <form id="feedbackForm" class="feedback-form">
+            <div class="feedback-form-row">
+                <input type="text" id="feedbackName" class="feedback-input" placeholder="Your name (optional)" maxlength="40">
+                <select id="feedbackCategory" class="feedback-input feedback-select">
+                    <option value="General">General</option>
+                    <option value="Bug Report">Bug Report</option>
+                    <option value="Suggestion">Suggestion</option>
+                    <option value="Praise">Praise</option>
+                </select>
+            </div>
+            <textarea id="feedbackMessage" class="feedback-input" placeholder="Share your thoughts on High-Rise Harvest..." rows="4" maxlength="600" required></textarea>
+            <div class="feedback-form-footer">
+                <span class="feedback-error" id="feedbackError"></span>
+                <button type="submit" class="btn-comment-submit" id="feedbackSubmitBtn">Submit Feedback</button>
+            </div>
+            <p class="feedback-success" id="feedbackSuccess" style="display:none;">Thanks! Your feedback has been submitted for review.</p>
+        </form>
+
+        <!-- POST-TEST SURVEY QR CODE -->
+        <div class="survey-qr-card survey-qr-card-post">
+            <a class="survey-qr-link" href="https://forms.gle/73aK8EBo5Y9ssXR69" target="_blank" rel="noopener noreferrer" aria-label="Open the Post-Test Survey form in a new tab">
+                <img class="survey-qr-svg" src="assets/qrcode-post-test-survey.svg" alt="QR code for the Post-Test Survey" loading="lazy">
+            </a>
+            <a class="survey-qr-fallback" href="https://forms.gle/73aK8EBo5Y9ssXR69" target="_blank" rel="noopener noreferrer">Click the QR code if you cannot scan</a>
+        </div>
+    </div>
+
+    <div class="feedback-feed-heading">
+        <h3>Top Feedback from the Community</h3>
+    </div>
+    <p class="devlog-loading" id="feedbackLoading">Loading feedback...</p>
+    <div class="feedback-feed" id="feedbackFeed"></div>
+</section>
+
+    <div id="downloadModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="downloadModalTitle">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Download High-Rise Harvest</h2>
+            <button class="close-btn" aria-label="Close download dialog">&times;</button>
+            <h2 id="downloadModalTitle">Download High-Rise Harvest</h2>
             <p>Select your preferred platform to download the PC build:</p>
             <div class="download-options">
-                <a href="YOUR_ITCH_IO_LINK_HERE" target="_blank" class="btn-download-option">Download via Itch.io</a>
-                <a href="YOUR_GOOGLE_DRIVE_LINK_HERE" target="_blank" class="btn-download-option">Download via Google Drive</a>
+                <span class="btn-download-option btn-download-disabled" aria-disabled="true" title="Coming Soon">
+                    Download via Itch.io
+                    <span class="coming-soon-badge">Coming Soon</span>
+                </span>
+                <a href="https://drive.google.com/drive/folders/1RNmtK6lbq7cqYH0jMpebKW6tTdBNiadb?usp=drive_link" target="_blank" rel="noopener noreferrer" class="btn-download-option">Download via Google Drive</a>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 Ink & Embers • FEU Institute of Technology • Capstone Project 2026 • All Right Reserved.</p>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="/assets/std-logo-wht.png" alt="Ink & Embers Logo" class="footer-logo">
+                <p class="footer-studio-name">Ink & Embers</p>
+                <span class="footer-subtitle">FEU Institute of Technology · Capstone 2026</span>
+            </div>
+            <div class="footer-nav">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#media">Media</a></li>
+                    <li><a href="#news">News</a></li>
+                    <li><a href="#team">Team</a></li>
+                    <li><a href="#feedback">Feedback</a></li>
+                </ul>
+            </div>
+            <div class="footer-resources">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="assets/docs/Ink & Embers - High-Rise Harvest GDD.pdf" target="_blank" rel="noopener noreferrer">Game Design Document</a></li>
+                    <li><a href="assets/docs/Ink & Embers - High-Rise Harvest Thesis Paper.pdf" target="_blank" rel="noopener noreferrer">Thesis Paper</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h4>Find Us</h4>
+                <div class="social-links">
+                    <span class="social-link-disabled" aria-disabled="true" title="Coming Soon">YouTube <span class="coming-soon-badge">Soon</span></span>
+                    <span class="social-link-disabled" aria-disabled="true" title="Coming Soon">Itch.io <span class="coming-soon-badge">Soon</span></span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Ink & Embers · All Rights Reserved.</p>
+            <p class="music-attribution">Music by <a href="https://pixabay.com/users/geoffharvey-9096471/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=377651">Geoff Harvey</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=377651">Pixabay</a></p>
+        </div>
     </footer>
 
+    <!-- Three.js ES Module importmap -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <!-- 3D Feature Card Viewer -->
+    <script type="module" src="feature-viewer.js"></script>
+
     <script src="script.js"></script>
+    <script src="music.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+    <!-- Moderation (must load before firebase.js, devlogs.js, feedback.js) -->
+    <script src="moderation.js"></script>
+
+    <!-- Dev Logs & Comments -->
+    <script src="firebase.js"></script>
+    <script src="devlogs.js"></script>
+    <script src="feedback.js"></script>
+
+    <!-- Modal focus trap for accessibility -->
+    <script>
+    (function() {
+        const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+        function trapFocus(modal) {
+            const focusable = Array.from(modal.querySelectorAll(FOCUSABLE)).filter(el => !el.disabled);
+            if (!focusable.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            modal.addEventListener('keydown', function handler(e) {
+                if (e.key !== 'Tab') return;
+                if (e.shiftKey) {
+                    if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+                } else {
+                    if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+                }
+                if (!modal.contains(document.activeElement)) first.focus();
+            });
+            first.focus();
+        }
+
+        // Observe download modal open
+        const downloadModal = document.getElementById('downloadModal');
+        const devlogModal = document.getElementById('devlogModal');
+        
+        // Move focus into the modal whenever it becomes visible
+        const observer = new MutationObserver(() => {
+            if (downloadModal && downloadModal.style.display === 'flex') trapFocus(downloadModal);
+        });
+        if (downloadModal) observer.observe(downloadModal, { attributes: true, attributeFilter: ['style'] });
+
+        const devlogObserver = new MutationObserver(() => {
+            if (devlogModal && devlogModal.style.display === 'flex') trapFocus(devlogModal);
+        });
+        if (devlogModal) devlogObserver.observe(devlogModal, { attributes: true, attributeFilter: ['style'] });
+    })();
+    </script>
 </body>
 </html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | High-Rise Harvest</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- CRITICAL: Theme flash prevention - must run BEFORE CSS loads -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'system';
+            function getSystemTheme() {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            function applyTheme(theme) {
+                const effectiveTheme = theme === 'system' ? getSystemTheme() : theme;
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+            }
+            applyTheme(savedTheme);
+        })();
+    </script>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <style>
+        .admin-page { min-height: 100vh; background-color: var(--bg-primary); color: var(--text-primary); transition: background-color 0.3s ease, color 0.3s ease; }
+        .admin-wrap { max-width: 900px; margin: 0 auto; padding: 3rem 5% 5rem; }
+        .admin-login {
+            max-width: 380px; margin: 4rem auto; background: var(--bg-card);
+            border-radius: 10px; padding: 2.5rem 2rem; box-shadow: 0 4px 6px var(--shadow-medium);
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        .admin-login h2 { font-size: 0.9rem; color: var(--heading-color); text-align: center; margin-bottom: 0.5rem; }
+        .admin-login input {
+            font-family: 'Press Start 2P', system-ui, sans-serif; font-size: 0.6rem;
+            padding: 0.7rem 0.85rem; border: 2px solid var(--border-color); border-radius: 6px; outline: none;
+            background: var(--bg-primary); color: var(--text-primary);
+        }
+        .admin-login input:focus { border-color: var(--accent-green); }
+        .admin-login button {
+            background: var(--accent-green); color: white; border: none; border-radius: 5px;
+            padding: 0.75rem; font-family: 'Press Start 2P', system-ui, sans-serif;
+            font-size: 0.6rem; cursor: pointer; transition: background 0.2s;
+        }
+        .admin-login button:hover { background: var(--accent-green-dark); }
+        .admin-login-error { font-size: 0.55rem; color: #c0392b; text-align: center; min-height: 1em; }
+
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        .admin-header h2 { font-size: 1rem; color: var(--heading-color); }
+        .btn-logout {
+            background: none; border: 2px solid var(--accent-green); color: var(--accent-green); border-radius: 5px;
+            padding: 0.5rem 1rem; font-family: 'Press Start 2P', system-ui, sans-serif;
+            font-size: 0.55rem; cursor: pointer; transition: background 0.2s, color 0.2s;
+        }
+        .btn-logout:hover { background: var(--accent-green); color: white; }
+
+        .admin-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
+        .admin-section-tabs { margin-bottom: 2rem; border-bottom-color: var(--accent-green); }
+        .admin-tab-btn {
+            background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px;
+            padding: 0.6rem 1rem; font-family: 'Press Start 2P', system-ui, sans-serif;
+            font-size: 0.55rem; color: var(--text-muted); cursor: pointer;
+            position: relative;
+        }
+        .admin-tab-btn.active { color: var(--heading-color); border-bottom-color: #e67e22; }
+
+        .admin-card {
+            background: var(--bg-card); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1rem;
+            box-shadow: 0 4px 6px var(--shadow-light); border-left: 4px solid #e67e22;
+        }
+        .admin-card-meta { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; font-size: 0.55rem; color: var(--text-muted); }
+        .admin-badge { background: #fff4e8; color: #e67e22; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.5rem; }
+        .admin-card-message { font-size: 0.65rem; color: var(--text-primary); line-height: 1.8; margin-bottom: 1rem; }
+        .admin-card-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+        .admin-btn {
+            border: none; border-radius: 5px; padding: 0.5rem 0.9rem; cursor: pointer;
+            font-family: 'Press Start 2P', system-ui, sans-serif; font-size: 0.55rem; color: white;
+            transition: opacity 0.2s;
+        }
+        .admin-btn:hover { opacity: 0.85; }
+        .admin-btn.approve { background: var(--accent-green); }
+        .admin-btn.reject { background: #c0392b; }
+        .admin-btn.restore { background: var(--accent-green); }
+        .admin-btn.delete { background: #888; }
+        .admin-empty { font-size: 0.65rem; color: var(--text-muted); text-align: center; padding: 3rem 0; }
+        .admin-note { font-size: 0.6rem; color: var(--text-muted); margin-bottom: 1rem; }
+    </style>
+</head>
+<body class="admin-page">
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">
+                <img src="/assets/logo.png" alt="High-Rise Harvest Logo">
+                <span class="logo-text">High-Rise Harvest — Admin</span>
+            </a>
+        </div>
+        <button type="button" id="themeToggle" class="theme-toggle-float" title="Theme">
+            <img src="assets/icons/system-mode.png" alt="System theme" class="theme-toggle-icon" id="themeToggleIcon">
+        </button>
+    </nav>
+
+    <!-- LOGIN -->
+    <div class="admin-login" id="adminLogin">
+        <h2>Admin Sign In</h2>
+        <input type="email" id="adminEmail" placeholder="Email" autocomplete="username">
+        <input type="password" id="adminPassword" placeholder="Password" autocomplete="current-password">
+        <button id="adminLoginBtn">Sign In</button>
+        <p class="admin-login-error" id="adminLoginError"></p>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="admin-wrap" id="adminDashboard" style="display:none;">
+        <div class="admin-header">
+            <h2>Moderation Dashboard</h2>
+            <button class="btn-logout" id="adminLogoutBtn">Log Out</button>
+        </div>
+
+        <!-- Section switcher -->
+        <div class="admin-tabs admin-section-tabs">
+            <button class="admin-tab-btn active" data-section="feedback">Feedback</button>
+            <button class="admin-tab-btn" data-section="comments">Dev Log Comments</button>
+        </div>
+
+        <!-- FEEDBACK -->
+        <div id="feedbackSection">
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" data-status="pending">Pending</button>
+                <button class="admin-tab-btn" data-status="approved">Approved</button>
+                <button class="admin-tab-btn" data-status="rejected">Rejected</button>
+            </div>
+            <div id="adminList"></div>
+        </div>
+
+        <!-- DEV LOG COMMENTS -->
+        <div id="commentsSection" style="display:none;">
+            <p class="admin-note">Showing the 50 most recent comments across all dev logs.</p>
+            <div id="adminCommentsList"></div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="firebase.js"></script>
+    <script src="admin.js"></script>
+
+    <!-- Theme Switcher -->
+    <script>
+        (function() {
+            'use strict';
+
+            const THEME_ORDER  = ['light', 'dark', 'system'];
+            const THEME_ICONS  = {
+                light:  'assets/icons/light-mode.png',
+                dark:   'assets/icons/dark-mode.png',
+                system: 'assets/icons/system-mode.png'
+            };
+            const THEME_LABELS = { light: 'Light', dark: 'Dark', system: 'System' };
+
+            const toggleBtn = document.getElementById('themeToggle');
+            const iconEl    = toggleBtn ? toggleBtn.querySelector('.theme-toggle-icon') : null;
+
+            let currentTheme = localStorage.getItem('theme') || 'system';
+
+            function getSystemTheme() {
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            function applyTheme(theme) {
+                const effectiveTheme = theme === 'system' ? getSystemTheme() : theme;
+                document.documentElement.setAttribute('data-theme', effectiveTheme);
+                localStorage.setItem('theme', theme);
+                currentTheme = theme;
+                updateToggleUI(theme);
+            }
+
+            function updateToggleUI(theme) {
+                if (!toggleBtn) return;
+                if (iconEl) {
+                    iconEl.src = THEME_ICONS[theme];
+                    iconEl.alt = THEME_LABELS[theme] + ' theme';
+                }
+                toggleBtn.title = 'Theme: ' + THEME_LABELS[theme];
+                toggleBtn.setAttribute('aria-label', 'Theme: ' + THEME_LABELS[theme] + '. Click to switch theme.');
+            }
+
+            function cycleTheme() {
+                const nextIndex = (THEME_ORDER.indexOf(currentTheme) + 1) % THEME_ORDER.length;
+                applyTheme(THEME_ORDER[nextIndex]);
+            }
+
+            function watchSystemTheme() {
+                const mq = window.matchMedia('(prefers-color-scheme: dark)');
+                const handler = function(e) {
+                    if (currentTheme === 'system') {
+                        document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                    }
+                };
+                if (mq.addEventListener) {
+                    mq.addEventListener('change', handler);
+                } else {
+                    mq.addListener(handler);
+                }
+            }
+
+            applyTheme(currentTheme);
+            if (toggleBtn) toggleBtn.addEventListener('click', cycleTheme);
+            watchSystemTheme();
+        })();
+    </script>
+</body>
+</html>
