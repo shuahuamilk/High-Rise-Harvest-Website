@@ -18,6 +18,29 @@ if (heroVideo) {
     });
     // Fallback: show video even if canplay fires late
     setTimeout(() => { heroVideo.style.opacity = '1'; }, 2000);
+
+    // Log real load failures (404, bad codec, etc.) instead of failing silently
+    heroVideo.addEventListener('error', () => {
+        console.warn('[hero-video] Failed to load:', heroVideo.currentSrc || heroVideo.src);
+    });
+
+    // Some browsers/devices block autoplay even with muted+playsinline
+    // (in-app browsers, battery saver, data saver). Retry on the user's
+    // first interaction so it isn't stuck on the poster indefinitely.
+    const heroPlayPromise = heroVideo.play();
+    if (heroPlayPromise !== undefined) {
+        heroPlayPromise.catch(() => {
+            const resumeHeroVideo = () => {
+                heroVideo.play().catch(() => { /* still blocked, poster stays visible */ });
+                document.removeEventListener('click', resumeHeroVideo);
+                document.removeEventListener('touchstart', resumeHeroVideo);
+                document.removeEventListener('keydown', resumeHeroVideo);
+            };
+            document.addEventListener('click', resumeHeroVideo, { once: true });
+            document.addEventListener('touchstart', resumeHeroVideo, { once: true });
+            document.addEventListener('keydown', resumeHeroVideo, { once: true });
+        });
+    }
 }
 
 
